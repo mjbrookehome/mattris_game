@@ -19,9 +19,14 @@ export default function App() {
   function calculateCellSize(): number {
     if (typeof window === 'undefined') return 32;
     const width = window.innerWidth;
-    // Leave 20px for padding, controls need ~100px at bottom
-    const availableWidth = Math.min(width - 40, 400);
-    return Math.max(14, Math.floor(availableWidth / BOARD_COLS));
+    
+    // Desktop or large screen: use standard size
+    if (width >= 1024) return 32;
+    
+    // Mobile: aggressive sizing to fit everything on screen
+    // Max 18px on mobile to save space for controls and UI
+    const availableWidth = Math.min(width - 20, 360);
+    return Math.max(12, Math.floor(availableWidth / BOARD_COLS));
   }
 
   useEffect(() => {
@@ -61,7 +66,7 @@ export default function App() {
 
   return (
     <div className="flex flex-col items-center select-none w-full min-h-screen bg-slate-950 overflow-x-hidden">
-      <h1 className="text-xl md:text-2xl font-bold tracking-widest text-indigo-400 mb-2 md:mb-4 uppercase pt-2">
+      <h1 className="text-lg md:text-2xl font-bold tracking-widest text-indigo-400 mb-1 md:mb-4 uppercase pt-1 md:pt-2">
         Mattris
       </h1>
 
@@ -103,25 +108,25 @@ export default function App() {
       </div>
 
       {/* Mobile layout: stacked vertical */}
-      <div className="md:hidden flex flex-col items-center gap-2 w-full px-2 pb-2">
-        {/* Score and difficulty info */}
-        <div className="flex gap-2 w-full justify-center">
-          <div className="bg-slate-800 rounded border border-slate-600 px-3 py-2 text-center min-w-20">
-            <span className="text-xs font-bold uppercase tracking-widest text-slate-400 block">Score</span>
-            <span className="text-sm font-bold text-indigo-300">{score.toLocaleString()}</span>
+      <div className="md:hidden flex flex-col items-center gap-0.5 w-full px-1 pb-0">
+        {/* Score and difficulty info - minimal */}
+        <div className="flex gap-0.5 w-full justify-center">
+          <div className="bg-slate-800 rounded border border-slate-600 px-1.5 py-0.5 text-center flex-1">
+            <span className="text-xs font-bold uppercase tracking-wider text-slate-400 block leading-none">Score</span>
+            <span className="text-xs font-bold text-indigo-300 leading-none">{score.toLocaleString()}</span>
           </div>
-          <div className="bg-slate-800 rounded border border-slate-600 px-3 py-2 text-center min-w-20">
-            <span className="text-xs font-bold uppercase tracking-widest text-slate-400 block">Level</span>
-            <span className="text-sm font-bold text-green-400">{level}</span>
+          <div className="bg-slate-800 rounded border border-slate-600 px-1.5 py-0.5 text-center flex-1">
+            <span className="text-xs font-bold uppercase tracking-wider text-slate-400 block leading-none">Lvl</span>
+            <span className="text-xs font-bold text-green-400 leading-none">{level}</span>
           </div>
-          <div className="bg-slate-800 rounded border border-slate-600 px-3 py-2 text-center min-w-20">
-            <span className="text-xs font-bold uppercase tracking-widest text-slate-400 block">Lines</span>
-            <span className="text-sm font-bold text-blue-400">{linesCleared}</span>
+          <div className="bg-slate-800 rounded border border-slate-600 px-1.5 py-0.5 text-center flex-1">
+            <span className="text-xs font-bold uppercase tracking-wider text-slate-400 block leading-none">Lines</span>
+            <span className="text-xs font-bold text-blue-400 leading-none">{linesCleared}</span>
           </div>
         </div>
 
         {/* Game board */}
-        <div className="relative">
+        <div className="relative py-0.5">
           <GameBoard board={board} currentPiece={currentPiece} cellSize={cellSize} />
           <GameOverlay
             status={status}
@@ -134,14 +139,29 @@ export default function App() {
           />
         </div>
 
-        {/* Hold and Next - side by side or stacked if space tight */}
-        <div className="flex gap-1 w-full justify-center max-w-sm">
-          <div className="flex-shrink-0">
-            <HoldPanel heldPiece={heldPiece} canHold={canHold} />
-          </div>
-          <div className="flex-shrink-0">
-            <NextQueue nextQueue={nextQueue} />
-          </div>
+        {/* Start/Restart buttons - minimal */}
+        <div className="flex gap-1 w-full px-1 pb-1">
+          {status === 'idle' || status === 'gameover' ? (
+            <button
+              onClick={startGame}
+              className="flex-1 px-2 py-1 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold rounded transition-colors"
+            >
+              {status === 'gameover' ? 'Play Again' : 'Start'}
+            </button>
+          ) : (
+            <button
+              onClick={togglePause}
+              className="flex-1 px-2 py-1 bg-slate-600 hover:bg-slate-500 text-white text-xs font-bold rounded transition-colors"
+            >
+              {status === 'paused' ? 'Resume' : 'Pause'}
+            </button>
+          )}
+          <button
+            onClick={restartGame}
+            className="flex-1 px-2 py-1 bg-slate-700 hover:bg-slate-600 text-white text-xs font-bold rounded transition-colors"
+          >
+            Restart
+          </button>
         </div>
       </div>
 

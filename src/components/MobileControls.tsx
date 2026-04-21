@@ -46,17 +46,39 @@ export default function MobileControls({
   const buttonClass =
     'active:scale-95 transition-transform active:opacity-70 disabled:opacity-50 disabled:cursor-not-allowed';
 
-  // Responsive button sizes based on screen width
-  const isTiny = window.innerWidth < 380;
-  const isSmall = window.innerWidth < 480;
-  const buttonSize = isTiny ? 'w-10 h-10 text-xs' : isSmall ? 'w-11 h-11 text-sm' : 'w-12 h-12 text-sm';
-  const hardDropHeight = isTiny ? 'h-8' : isSmall ? 'h-9' : 'h-10';
-  const padding = isTiny ? 'p-1' : 'p-2';
-  const spacing = isTiny ? 'space-y-1' : 'space-y-2';
-  const gap = isTiny ? 'gap-0.5' : 'gap-1';
+  // Responsive button sizes based on screen width - ultra compact
+  const isTiny = window.innerWidth < 360;
+  const isSmall = window.innerWidth < 420;
+  const isMedium = window.innerWidth < 600;
+  
+  let buttonSize = 'w-12 h-12 text-sm';
+  let hardDropHeight = 'h-10';
+  let padding = 'p-2';
+  let spacing = 'space-y-1';
+  let gap = 'gap-1';
+  
+  if (isTiny) {
+    buttonSize = 'w-8 h-8 text-xs';
+    hardDropHeight = 'h-6';
+    padding = 'p-0.5';
+    spacing = 'space-y-0.5';
+    gap = 'gap-0';
+  } else if (isSmall) {
+    buttonSize = 'w-9 h-9 text-xs';
+    hardDropHeight = 'h-7';
+    padding = 'p-1';
+    spacing = 'space-y-0.5';
+    gap = 'gap-0.5';
+  } else if (isMedium) {
+    buttonSize = 'w-10 h-10 text-xs';
+    hardDropHeight = 'h-8';
+    padding = 'p-1';
+    spacing = 'space-y-1';
+    gap = 'gap-0.5';
+  }
 
   return (
-    <div className="w-full px-1 pb-2">
+    <div className="w-full px-0.5 pb-0.5">
       <div className={`bg-slate-900 border-2 border-green-400 rounded-lg ${padding} ${spacing}`}>
         {/* D-Pad for movement */}
         <div className={`flex justify-between items-center ${gap}`}>
