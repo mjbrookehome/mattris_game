@@ -71,7 +71,7 @@ export default function App() {
       </h1>
 
       {/* Desktop layout: 3 columns */}
-      <div className="hidden md:flex gap-3 items-start pb-4">
+      <div className="desktop-layout hidden md:flex gap-3 items-start pb-4">
         {/* Left column */}
         <div className="flex flex-col gap-3">
           <HoldPanel heldPiece={heldPiece} canHold={canHold} />
@@ -108,7 +108,7 @@ export default function App() {
       </div>
 
       {/* Mobile layout: stacked vertical */}
-      <div className="md:hidden flex flex-col items-center gap-0.5 w-full px-1 pb-0">
+      <div className="mobile-layout md:hidden flex flex-col items-center gap-0.5 w-full px-1 pb-0">
         {/* Score and difficulty info - minimal */}
         <div className="flex gap-0.5 w-full justify-center">
           <div className="bg-slate-800 rounded border border-slate-600 px-1.5 py-0.5 text-center flex-1">

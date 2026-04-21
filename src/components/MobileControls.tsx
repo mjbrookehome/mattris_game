@@ -78,7 +78,7 @@ export default function MobileControls({
   }
 
   return (
-    <div className="w-full px-0.5 pb-0.5">
+    <div className="mobile-controls w-full px-0.5 pb-0.5">
       <div className={`bg-slate-900 border-2 border-green-400 rounded-lg ${padding} ${spacing}`}>
         {/* D-Pad for movement */}
         <div className={`flex justify-between items-center ${gap}`}>

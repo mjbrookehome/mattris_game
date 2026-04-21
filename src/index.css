@@ -30,6 +30,33 @@ body {
   }
 }
 
+/* Force mobile layout on small screens */
+@media (max-width: 767px) {
+  .desktop-layout {
+    display: none !important;
+  }
+  .mobile-controls {
+    display: block !important;
+  }
+  /* Ensure desktop components are hidden */
+  .desktop-only {
+    display: none !important;
+  }
+}
+
+@media (min-width: 768px) {
+  .mobile-layout {
+    display: none !important;
+  }
+  .mobile-controls {
+    display: none !important;
+  }
+  /* Ensure mobile components are hidden on desktop */
+  .mobile-only {
+    display: none !important;
+  }
+}
+
 #root {
   width: 100%;
 }
