@@ -1,4 +1,4 @@
-# Tetris Clone
+# Mattris
 
 A single-player Tetris clone built with React 18, Zustand, and HTML5 Canvas. Runs entirely in the browser with no backend or authentication required.
 
@@ -128,4 +128,4 @@ tests/
 
 ## Persistence
 
-The personal best score is saved to `localStorage` under the key `tetris_highscore`. No server, database, or account is required.
+The personal best score is saved to `localStorage` under the key `mattris_highscore`. No server, database, or account is required.

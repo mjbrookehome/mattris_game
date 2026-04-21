@@ -14,6 +14,8 @@ import {
   NEXT_QUEUE_SIZE,
   getDropInterval,
   LOCAL_STORAGE_HIGH_SCORE_KEY,
+  Difficulty,
+  DIFFICULTY_MULTIPLIERS,
 } from '../game/constants';
 
 export type GameStatus = 'idle' | 'playing' | 'paused' | 'gameover';
@@ -32,11 +34,13 @@ export interface GameState {
   status: GameStatus;
   backToBack: boolean;
   dropInterval: number;
+  difficulty: Difficulty;
 
   // Actions
   startGame: () => void;
   restartGame: () => void;
   togglePause: () => void;
+  setDifficulty: (d: Difficulty) => void;
   moveLeft: () => void;
   moveRight: () => void;
   softDrop: () => void;
@@ -44,7 +48,8 @@ export interface GameState {
   rotateCW: () => void;
   rotateCCW: () => void;
   holdPiece: () => void;
-  tick: () => void; // Called by the game loop each gravity tick
+  tick: () => void;
+  _lockCurrentPiece: () => void;
 }
 
 function loadHighScore(): number {
@@ -64,7 +69,13 @@ function saveHighScore(score: number): void {
   }
 }
 
-function initialState(): Omit<GameState, keyof ReturnType<typeof getActions>> {
+function getDifficultyAdjustedInterval(linesCleared: number, difficulty: Difficulty): number {
+  const baseInterval = getDropInterval(linesCleared);
+  const multiplier = DIFFICULTY_MULTIPLIERS[difficulty];
+  return Math.round(baseInterval * multiplier);
+}
+
+function buildInitialData() {
   const bag = createBag();
   const { queue, bag: remainingBag } = fillQueue([], bag, NEXT_QUEUE_SIZE + 1);
   const nextQueue = queue.slice(0, NEXT_QUEUE_SIZE);
@@ -73,7 +84,7 @@ function initialState(): Omit<GameState, keyof ReturnType<typeof getActions>> {
   return {
     board: createBoard(),
     currentPiece: spawnPiece(firstType),
-    heldPiece: null,
+    heldPiece: null as PieceType | null,
     canHold: true,
     nextQueue,
     bag: remainingBag,
@@ -83,23 +94,20 @@ function initialState(): Omit<GameState, keyof ReturnType<typeof getActions>> {
     linesCleared: 0,
     status: 'idle' as GameStatus,
     backToBack: false,
-    dropInterval: getDropInterval(0),
+    difficulty: 'Normal' as Difficulty,
+    dropInterval: getDifficultyAdjustedInterval(0, 'Normal'),
   };
 }
 
-// Separated to avoid circular reference in initialState typing
-function getActions(_set: unknown, _get: unknown) {
-  return {};
-}
-
 export const useGameStore = create<GameState>((set, get) => ({
-  ...initialState(),
+  ...buildInitialData(),
 
   startGame() {
     const bag = createBag();
     const { queue, bag: remainingBag } = fillQueue([], bag, NEXT_QUEUE_SIZE + 1);
     const nextQueue = queue.slice(0, NEXT_QUEUE_SIZE);
     const firstType = queue[NEXT_QUEUE_SIZE];
+    const { difficulty } = get();
 
     set({
       board: createBoard(),
@@ -113,8 +121,15 @@ export const useGameStore = create<GameState>((set, get) => ({
       linesCleared: 0,
       status: 'playing',
       backToBack: false,
-      dropInterval: getDropInterval(0),
+      dropInterval: getDifficultyAdjustedInterval(0, difficulty),
     });
+  },
+
+  setDifficulty(d: Difficulty) {
+    const { status } = get();
+    if (status === 'idle') {
+      set({ difficulty: d });
+    }
   },
 
   restartGame() {
@@ -215,7 +230,7 @@ export const useGameStore = create<GameState>((set, get) => ({
 
   // Internal helper – not exposed on the type directly but added at runtime
   _lockCurrentPiece() {
-    const { currentPiece, board, nextQueue, bag, score, linesCleared, backToBack, level } = get();
+    const { currentPiece, board, nextQueue, bag, score, linesCleared, backToBack, level, difficulty } = get();
     if (!currentPiece) return;
 
     const newBoard = lockPiece(board, currentPiece);
@@ -248,7 +263,7 @@ export const useGameStore = create<GameState>((set, get) => ({
       level: newLevel,
       backToBack: newB2B,
       canHold: true,
-      dropInterval: getDropInterval(totalLines),
+      dropInterval: getDifficultyAdjustedInterval(totalLines, difficulty),
       status: isGameOver ? 'gameover' : 'playing',
     });
   },

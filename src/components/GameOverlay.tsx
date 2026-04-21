@@ -1,14 +1,17 @@
 import { GameStatus } from '../store/gameStore';
+import { DIFFICULTIES, DIFFICULTY_LABELS, Difficulty } from '../game/constants';
 
 interface GameOverlayProps {
   status: GameStatus;
   score: number;
+  difficulty: Difficulty;
   onStart: () => void;
   onRestart: () => void;
   onResume: () => void;
+  onSetDifficulty: (d: Difficulty) => void;
 }
 
-export default function GameOverlay({ status, score, onStart, onRestart, onResume }: GameOverlayProps) {
+export default function GameOverlay({ status, score, difficulty, onStart, onRestart, onResume, onSetDifficulty }: GameOverlayProps) {
   if (status === 'playing') return null;
 
   return (
@@ -18,8 +21,29 @@ export default function GameOverlay({ status, score, onStart, onRestart, onResum
     >
       {status === 'idle' && (
         <>
-          <h2 className="text-3xl font-bold text-white mb-2">TETRIS</h2>
-          <p className="text-slate-300 mb-6 text-sm">Use keyboard to play</p>
+          <h2 className="text-3xl font-bold text-white mb-2">MATTRIS</h2>
+          <p className="text-slate-300 mb-4 text-sm">Use keyboard to play</p>
+          
+          <div className="mb-6 space-y-2">
+            <p className="text-slate-400 text-xs font-semibold uppercase tracking-wider">Select Difficulty</p>
+            <div className="flex gap-2 flex-wrap justify-center max-w-xs">
+              {DIFFICULTIES.map(d => (
+                <button
+                  key={d}
+                  onClick={() => onSetDifficulty(d)}
+                  className={`px-3 py-1 text-sm font-bold rounded transition-all ${
+                    difficulty === d
+                      ? 'bg-indigo-600 text-white ring-2 ring-indigo-400'
+                      : 'bg-slate-700 text-slate-200 hover:bg-slate-600'
+                  }`}
+                  data-testid={`difficulty-${d.toLowerCase()}`}
+                >
+                  {DIFFICULTY_LABELS[d]}
+                </button>
+              ))}
+            </div>
+          </div>
+
           <button
             onClick={onStart}
             className="px-6 py-2 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded transition-colors"

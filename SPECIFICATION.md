@@ -1,8 +1,8 @@
-# Tetris Clone — Game Specification
+# Mattris — Game Specification
 
 ## Overview
 
-A single-player, single-level Tetris clone playable in the browser. No authentication required. The game runs entirely client-side with optional local score persistence.
+A single-player, single-level Mattris playable in the browser. No authentication required. The game runs entirely client-side with optional local score persistence.
 
 ---
 

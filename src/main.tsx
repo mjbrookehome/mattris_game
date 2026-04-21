@@ -4,8 +4,8 @@ import App from './App';
 import './index.css';
 import { useGameStore } from './store/gameStore';
 
-// Expose store for E2E testing only – stripped in production by tree-shaking env check
-if (import.meta.env.DEV) {
+// Expose store for E2E testing only – stripped in production builds
+if ((import.meta as { env?: { DEV?: boolean } }).env?.DEV) {
   (window as unknown as Record<string, unknown>).__GAME_STORE__ = useGameStore;
 }
 

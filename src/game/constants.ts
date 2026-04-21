@@ -60,4 +60,24 @@ export const HARD_DROP_POINTS = 2;
 
 export const LINES_PER_LEVEL = 10;
 
-export const LOCAL_STORAGE_HIGH_SCORE_KEY = 'tetris_highscore';
+export const LOCAL_STORAGE_HIGH_SCORE_KEY = 'mattris_highscore';
+
+// Difficulty levels
+export const DIFFICULTIES = ['Easy', 'Normal', 'Hard', 'Expert', 'Insane'] as const;
+export type Difficulty = (typeof DIFFICULTIES)[number];
+
+export const DIFFICULTY_MULTIPLIERS: Record<Difficulty, number> = {
+  Easy: 1.5,
+  Normal: 1.0,
+  Hard: 0.7,
+  Expert: 0.5,
+  Insane: 0.3,
+};
+
+export const DIFFICULTY_LABELS: Record<Difficulty, string> = {
+  Easy: '🐢 Easy',
+  Normal: '⚖️ Normal',
+  Hard: '🔥 Hard',
+  Expert: '⚡ Expert',
+  Insane: '💥 Insane',
+};
