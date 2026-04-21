@@ -21,11 +21,11 @@ export default function MobileControls({
   onHold,
   isPlaying,
 }: MobileControlsProps) {
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 1024);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 1280);
 
   useEffect(() => {
     const handleResize = () => {
-      setIsMobile(window.innerWidth < 1024);
+      setIsMobile(window.innerWidth < 1280);
     };
 
     window.addEventListener('resize', handleResize);

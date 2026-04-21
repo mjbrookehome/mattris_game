@@ -7,7 +7,7 @@ interface ControlsProps {
 
 export default function Controls({ status, onStart, onRestart, onTogglePause }: ControlsProps) {
   return (
-    <div className="hidden md:flex gap-3 mt-3 justify-center">
+    <div className="hidden xl:flex gap-3 mt-3 justify-center">
       {status === 'idle' || status === 'gameover' ? (
         <button
           onClick={onStart}

@@ -66,12 +66,12 @@ export default function App() {
 
   return (
     <div className="flex flex-col items-center select-none w-full min-h-screen bg-slate-950 overflow-x-hidden">
-      <h1 className="text-lg md:text-2xl font-bold tracking-widest text-indigo-400 mb-1 md:mb-4 uppercase pt-1 md:pt-2">
+      <h1 className="text-lg xl:text-2xl font-bold tracking-widest text-indigo-400 mb-1 xl:mb-4 uppercase pt-1 xl:pt-2">
         Mattris
       </h1>
 
       {/* Desktop layout: 3 columns */}
-      <div className="desktop-layout hidden md:flex gap-3 items-start pb-4">
+      <div className="desktop-layout hidden xl:flex gap-3 items-start pb-4">
         {/* Left column */}
         <div className="flex flex-col gap-3">
           <HoldPanel heldPiece={heldPiece} canHold={canHold} />
@@ -108,7 +108,7 @@ export default function App() {
       </div>
 
       {/* Mobile layout: stacked vertical */}
-      <div className="mobile-layout md:hidden flex flex-col items-center gap-0.5 w-full px-1 pb-0">
+      <div className="mobile-layout xl:hidden flex flex-col items-center gap-0.5 w-full px-1 pb-0">
         {/* Score and difficulty info - minimal */}
         <div className="flex gap-0.5 w-full justify-center">
           <div className="bg-slate-800 rounded border border-slate-600 px-1.5 py-0.5 text-center flex-1">
@@ -183,7 +183,7 @@ export default function App() {
         isPlaying={status === 'playing'}
       />
 
-      <div className="mt-2 md:mt-4 text-xs text-slate-500 space-y-0.5 text-center hidden md:block pb-4">
+      <div className="mt-2 xl:mt-4 text-xs text-slate-500 space-y-0.5 text-center hidden xl:block pb-4">
         <p>← → Move &nbsp;|&nbsp; ↑ Rotate CW &nbsp;|&nbsp; Z Rotate CCW</p>
         <p>↓ Soft drop &nbsp;|&nbsp; Space Hard drop &nbsp;|&nbsp; C Hold &nbsp;|&nbsp; Esc Pause</p>
       </div>
