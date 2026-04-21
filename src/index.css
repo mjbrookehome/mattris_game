@@ -7,8 +7,28 @@ body {
   background-color: #0f172a;
   color: #f1f5f9;
   font-family: 'Segoe UI', system-ui, sans-serif;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
+}
+
+/* Desktop: Center content */
+@media (min-width: 768px) {
+  body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+  }
+}
+
+/* Mobile: Allow scrolling */
+@media (max-width: 767px) {
+  body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+}
+
+#root {
+  width: 100%;
 }
