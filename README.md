@@ -25,6 +25,8 @@ Open [http://localhost:5173](http://localhost:5173) in your browser. Press **Ent
 
 ## Controls
 
+### Desktop (Keyboard)
+
 | Action | Keys |
 |---|---|
 | Move left | `←` `A` |
@@ -36,6 +38,34 @@ Open [http://localhost:5173](http://localhost:5173) in your browser. Press **Ent
 | Hold piece | `C` `Shift` |
 | Pause / Resume | `Esc` `P` |
 
+### Mobile (Touch)
+
+On mobile and tablet devices, an on-screen control panel appears below the game board with touch-friendly buttons:
+
+- **Left/Right arrows** - Move piece horizontally
+- **Up/Down chevrons** - Rotate counter-clockwise / Soft drop
+- **↻ button** - Rotate clockwise
+- **HOLD button** - Hold the current piece
+- **HARD DROP button** - Instantly drop piece to the bottom
+
+All buttons are disabled until the game starts. The mobile UI is automatically shown on screens smaller than 768px (md breakpoint).
+
+**Layout:**
+```
+┌─────────────────────────┐
+│  ◀    ↺    ↻            │
+│  ↑  ↓    HOLD           │
+│  ▶                      │
+├─────────────────────────┤
+│  HARD DROP (Space)      │
+└─────────────────────────┘
+```
+
+For best experience on mobile:
+- Use landscape orientation for larger gameplay area
+- Buttons are 56×56px (14×14mm) for easy thumb targeting
+- Use visual feedback (button press animation) to confirm input
+
 ## Testing
 
 ### Unit & component tests (Vitest + React Testing Library)
@@ -44,7 +74,7 @@ Open [http://localhost:5173](http://localhost:5173) in your browser. Press **Ent
 npm run test
 ```
 
-Runs all 59 tests across 7 suites covering game logic (bag randomiser, board manipulation, SRS rotation, scoring) and React components (ScorePanel, HoldPanel, GameOverlay).
+Runs all 62 tests across 8 suites covering game logic (bag randomiser, board manipulation, SRS rotation, scoring) and React components (ScorePanel, HoldPanel, GameOverlay, MobileControls).
 
 Watch mode:
 
@@ -113,11 +143,12 @@ src/
 │   ├── useGameLoop.ts   # Gravity tick via setInterval
 │   └── useKeyboard.ts   # Keyboard input bindings
 └── components/
-    ├── GameBoard.tsx    # Canvas renderer + ghost piece
+    ├── GameBoard.tsx      # Canvas renderer + ghost piece
     ├── HoldPanel.tsx
     ├── NextQueue.tsx
     ├── ScorePanel.tsx
-    ├── GameOverlay.tsx  # Start / Pause / Game Over screens
+    ├── GameOverlay.tsx    # Start / Pause / Game Over screens
+    ├── MobileControls.tsx # Touch-friendly button panel
     └── Controls.tsx
 
 tests/
