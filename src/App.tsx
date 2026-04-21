@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { useGameStore } from './store/gameStore';
 import { DIFFICULTY_LABELS } from './game/constants';
 import { useGameLoop } from './hooks/useGameLoop';
@@ -10,7 +11,28 @@ import GameOverlay from './components/GameOverlay';
 import Controls from './components/Controls';
 import MobileControls from './components/MobileControls';
 
+const BOARD_COLS = 10;
+
 export default function App() {
+  const [cellSize, setCellSize] = useState(() => calculateCellSize());
+  
+  function calculateCellSize(): number {
+    if (typeof window === 'undefined') return 32;
+    const width = window.innerWidth;
+    // Leave 20px for padding, controls need ~100px at bottom
+    const availableWidth = Math.min(width - 40, 400);
+    return Math.max(14, Math.floor(availableWidth / BOARD_COLS));
+  }
+
+  useEffect(() => {
+    const handleResize = () => {
+      setCellSize(calculateCellSize());
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   const board = useGameStore(s => s.board);
   const currentPiece = useGameStore(s => s.currentPiece);
   const heldPiece = useGameStore(s => s.heldPiece);
@@ -52,7 +74,7 @@ export default function App() {
 
         {/* Game board */}
         <div className="relative">
-          <GameBoard board={board} currentPiece={currentPiece} />
+          <GameBoard board={board} currentPiece={currentPiece} cellSize={32} />
           <GameOverlay
             status={status}
             score={score}
@@ -100,7 +122,7 @@ export default function App() {
 
         {/* Game board */}
         <div className="relative">
-          <GameBoard board={board} currentPiece={currentPiece} />
+          <GameBoard board={board} currentPiece={currentPiece} cellSize={cellSize} />
           <GameOverlay
             status={status}
             score={score}
@@ -113,7 +135,7 @@ export default function App() {
         </div>
 
         {/* Hold and Next - side by side or stacked if space tight */}
-        <div className="flex gap-2 w-full justify-center max-w-sm">
+        <div className="flex gap-1 w-full justify-center max-w-sm">
           <div className="flex-shrink-0">
             <HoldPanel heldPiece={heldPiece} canHold={canHold} />
           </div>

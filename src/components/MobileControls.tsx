@@ -46,15 +46,22 @@ export default function MobileControls({
   const buttonClass =
     'active:scale-95 transition-transform active:opacity-70 disabled:opacity-50 disabled:cursor-not-allowed';
 
-  const buttonSize = 'w-12 h-12 text-sm';
+  // Responsive button sizes based on screen width
+  const isTiny = window.innerWidth < 380;
+  const isSmall = window.innerWidth < 480;
+  const buttonSize = isTiny ? 'w-10 h-10 text-xs' : isSmall ? 'w-11 h-11 text-sm' : 'w-12 h-12 text-sm';
+  const hardDropHeight = isTiny ? 'h-8' : isSmall ? 'h-9' : 'h-10';
+  const padding = isTiny ? 'p-1' : 'p-2';
+  const spacing = isTiny ? 'space-y-1' : 'space-y-2';
+  const gap = isTiny ? 'gap-0.5' : 'gap-1';
 
   return (
-    <div className="w-full px-2 pb-4">
-      <div className="bg-slate-900 border-2 border-green-400 rounded-lg p-2 space-y-2">
+    <div className="w-full px-1 pb-2">
+      <div className={`bg-slate-900 border-2 border-green-400 rounded-lg ${padding} ${spacing}`}>
         {/* D-Pad for movement */}
-        <div className="flex justify-between items-center gap-1">
+        <div className={`flex justify-between items-center ${gap}`}>
           {/* Left side - Movement and rotation */}
-          <div className="flex gap-1">
+          <div className={`flex ${gap}`}>
             <button
               onClick={() => handleAction(onMoveLeft)}
               disabled={!isPlaying}
@@ -63,7 +70,7 @@ export default function MobileControls({
             >
               ◀
             </button>
-            <div className="flex flex-col gap-1">
+            <div className={`flex flex-col ${gap}`}>
               <button
                 onClick={() => handleAction(onRotateCCW)}
                 disabled={!isPlaying}
@@ -92,7 +99,7 @@ export default function MobileControls({
           </div>
 
           {/* Right side - Action buttons */}
-          <div className="flex gap-1">
+          <div className={`flex ${gap}`}>
             <button
               onClick={() => handleAction(onRotateCW)}
               disabled={!isPlaying}
@@ -116,10 +123,10 @@ export default function MobileControls({
         <button
           onClick={() => handleAction(onHardDrop)}
           disabled={!isPlaying}
-          className={`w-full h-10 bg-red-600 hover:bg-red-500 text-white font-bold rounded-lg text-sm ${buttonClass}`}
+          className={`w-full ${hardDropHeight} bg-red-600 hover:bg-red-500 text-white font-bold rounded-lg text-xs ${buttonClass}`}
           aria-label="Hard drop"
         >
-          HARD DROP
+          DROP
         </button>
       </div>
     </div>

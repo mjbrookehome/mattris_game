@@ -2,32 +2,33 @@ import { useEffect, useRef } from 'react';
 import { Board } from '../game/board';
 import { Piece, getPieceCells, TETROMINOES } from '../game/tetrominoes';
 import { getGhostY } from '../game/board';
-import { CELL_SIZE, PIECE_COLORS, BUFFER_ROWS, BOARD_COLS, VISIBLE_ROWS } from '../game/constants';
+import { PIECE_COLORS, BUFFER_ROWS, BOARD_COLS, VISIBLE_ROWS } from '../game/constants';
 import { PieceType } from '../game/constants';
 
 interface GameBoardProps {
   board: Board;
   currentPiece: Piece | null;
+  cellSize?: number;
 }
 
-function drawCell(ctx: CanvasRenderingContext2D, x: number, y: number, color: string, ghost = false) {
+function drawCell(ctx: CanvasRenderingContext2D, x: number, y: number, cellSize: number, color: string, ghost = false) {
   ctx.fillStyle = ghost ? PIECE_COLORS.ghost : color;
-  ctx.fillRect(x * CELL_SIZE + 1, y * CELL_SIZE + 1, CELL_SIZE - 2, CELL_SIZE - 2);
+  ctx.fillRect(x * cellSize + 1, y * cellSize + 1, cellSize - 2, cellSize - 2);
 
   if (!ghost) {
     // Highlight top-left edge
     ctx.fillStyle = 'rgba(255,255,255,0.3)';
-    ctx.fillRect(x * CELL_SIZE + 1, y * CELL_SIZE + 1, CELL_SIZE - 2, 3);
-    ctx.fillRect(x * CELL_SIZE + 1, y * CELL_SIZE + 1, 3, CELL_SIZE - 2);
+    ctx.fillRect(x * cellSize + 1, y * cellSize + 1, cellSize - 2, 3);
+    ctx.fillRect(x * cellSize + 1, y * cellSize + 1, 3, cellSize - 2);
 
     // Shadow bottom-right edge
     ctx.fillStyle = 'rgba(0,0,0,0.3)';
-    ctx.fillRect(x * CELL_SIZE + 1, y * CELL_SIZE + CELL_SIZE - 4, CELL_SIZE - 2, 3);
-    ctx.fillRect(x * CELL_SIZE + CELL_SIZE - 4, y * CELL_SIZE + 1, 3, CELL_SIZE - 2);
+    ctx.fillRect(x * cellSize + 1, y * cellSize + cellSize - 4, cellSize - 2, 3);
+    ctx.fillRect(x * cellSize + cellSize - 4, y * cellSize + 1, 3, cellSize - 2);
   }
 }
 
-export default function GameBoard({ board, currentPiece }: GameBoardProps) {
+export default function GameBoard({ board, currentPiece, cellSize = 32 }: GameBoardProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -36,8 +37,8 @@ export default function GameBoard({ board, currentPiece }: GameBoardProps) {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    const width = BOARD_COLS * CELL_SIZE;
-    const height = VISIBLE_ROWS * CELL_SIZE;
+    const width = BOARD_COLS * cellSize;
+    const height = VISIBLE_ROWS * cellSize;
 
     ctx.clearRect(0, 0, width, height);
 
@@ -48,14 +49,14 @@ export default function GameBoard({ board, currentPiece }: GameBoardProps) {
     ctx.lineWidth = 1;
     for (let r = 0; r <= VISIBLE_ROWS; r++) {
       ctx.beginPath();
-      ctx.moveTo(0, r * CELL_SIZE);
-      ctx.lineTo(width, r * CELL_SIZE);
+      ctx.moveTo(0, r * cellSize);
+      ctx.lineTo(width, r * cellSize);
       ctx.stroke();
     }
     for (let c = 0; c <= BOARD_COLS; c++) {
       ctx.beginPath();
-      ctx.moveTo(c * CELL_SIZE, 0);
-      ctx.lineTo(c * CELL_SIZE, height);
+      ctx.moveTo(c * cellSize, 0);
+      ctx.lineTo(c * cellSize, height);
       ctx.stroke();
     }
 
@@ -65,7 +66,7 @@ export default function GameBoard({ board, currentPiece }: GameBoardProps) {
         const cell = board[row][col];
         if (cell) {
           const visibleRow = row - BUFFER_ROWS;
-          drawCell(ctx, col, visibleRow, PIECE_COLORS[cell]);
+          drawCell(ctx, col, visibleRow, cellSize, PIECE_COLORS[cell]);
         }
       }
     }
@@ -76,23 +77,23 @@ export default function GameBoard({ board, currentPiece }: GameBoardProps) {
       const ghostCells = getPieceCells({ ...currentPiece, y: ghostY });
       for (const [col, row] of ghostCells) {
         const visibleRow = row - BUFFER_ROWS;
-        if (visibleRow >= 0) drawCell(ctx, col, visibleRow, PIECE_COLORS[currentPiece.type], true);
+        if (visibleRow >= 0) drawCell(ctx, col, visibleRow, cellSize, PIECE_COLORS[currentPiece.type], true);
       }
 
       // Active piece
       const cells = getPieceCells(currentPiece);
       for (const [col, row] of cells) {
         const visibleRow = row - BUFFER_ROWS;
-        if (visibleRow >= 0) drawCell(ctx, col, visibleRow, PIECE_COLORS[currentPiece.type]);
+        if (visibleRow >= 0) drawCell(ctx, col, visibleRow, cellSize, PIECE_COLORS[currentPiece.type]);
       }
     }
-  }, [board, currentPiece]);
+  }, [board, currentPiece, cellSize]);
 
   return (
     <canvas
       ref={canvasRef}
-      width={BOARD_COLS * CELL_SIZE}
-      height={VISIBLE_ROWS * CELL_SIZE}
+      width={BOARD_COLS * cellSize}
+      height={VISIBLE_ROWS * cellSize}
       className="border border-slate-600"
       aria-label="Tetris game board"
     />
