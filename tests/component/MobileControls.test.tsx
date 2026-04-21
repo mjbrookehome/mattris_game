@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import MobileControls from '../../src/components/MobileControls';
@@ -14,7 +14,25 @@ describe('MobileControls', () => {
     onHold: vi.fn(),
   };
 
-  it('renders mobile controls', () => {
+  beforeEach(() => {
+    // Mock window.innerWidth to be mobile size (less than 1024px)
+    Object.defineProperty(window, 'innerWidth', {
+      writable: true,
+      configurable: true,
+      value: 400,
+    });
+  });
+
+  afterEach(() => {
+    // Reset window.innerWidth
+    Object.defineProperty(window, 'innerWidth', {
+      writable: true,
+      configurable: true,
+      value: 1024,
+    });
+  });
+
+  it('renders mobile controls on small screens', () => {
     render(
       <MobileControls
         {...mockHandlers}

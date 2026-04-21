@@ -1,3 +1,5 @@
+import { useState, useEffect } from 'react';
+
 interface MobileControlsProps {
   onMoveLeft: () => void;
   onMoveRight: () => void;
@@ -19,6 +21,21 @@ export default function MobileControls({
   onHold,
   isPlaying,
 }: MobileControlsProps) {
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 1024);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 1024);
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  if (!isMobile) {
+    return null;
+  }
+
   // Only trigger callbacks when game is playing
   const handleAction = (callback: () => void) => {
     if (isPlaying) {
@@ -32,8 +49,8 @@ export default function MobileControls({
   const buttonSize = 'w-12 h-12 text-sm';
 
   return (
-    <div className="md:hidden w-full px-2 pb-2">
-      <div className="bg-slate-900 border border-slate-700 rounded-lg p-2 space-y-2">
+    <div className="w-full px-2 pb-4">
+      <div className="bg-slate-900 border-2 border-green-400 rounded-lg p-2 space-y-2">
         {/* D-Pad for movement */}
         <div className="flex justify-between items-center gap-1">
           {/* Left side - Movement and rotation */}
